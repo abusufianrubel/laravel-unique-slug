@@ -2,7 +2,6 @@
 
 namespace Sufian\SlugHelper;
 
-use Sufian\SlugHelper\SlugHelper;
 use Illuminate\Support\ServiceProvider;
 
 class SlugHelperServiceProvider extends ServiceProvider
@@ -14,7 +13,7 @@ class SlugHelperServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->bind('slug-helper', function ($app) {
+        $this->app->singleton('slug-helper', function () {
             return new SlugHelper();
         });
 
@@ -33,6 +32,6 @@ class SlugHelperServiceProvider extends ServiceProvider
         // Publish the package's configuration file to the Laravel application
         $this->publishes([
             __DIR__.'/../config/slug-helper.php' => config_path('slug-helper.php'),
-        ]);
-    }    
+        ], 'slug-helper-config');
+    }
 }

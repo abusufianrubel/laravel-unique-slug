@@ -1,5 +1,5 @@
 {
-    "name": "sufian/slug-helper",
+    "name": "sufianrubel/unique-slug",
     "description": "A Laravel package for generating unique slugs.",
     "type": "library",
     "authors": [
@@ -10,12 +10,25 @@
     ],
     "require": {
         "php": "^8.0",
-        "illuminate/support": "^8.0"
+        "illuminate/database": "^8.0 || ^9.0 || ^10.0 || ^11.0 || ^12.0 || ^13.0",
+        "illuminate/support": "^8.0 || ^9.0 || ^10.0 || ^11.0 || ^12.0 || ^13.0"
+    },
+    "require-dev": {
+        "orchestra/testbench": "^6.0 || ^7.0 || ^8.0 || ^9.0 || ^10.0 || ^11.0",
+        "phpunit/phpunit": "^9.5 || ^10.5 || ^11.0 || ^12.0"
     },
     "autoload": {
         "psr-4": {
             "Sufian\\SlugHelper\\": "src/"
         }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Sufian\\SlugHelper\\Tests\\": "tests/"
+        }
+    },
+    "scripts": {
+        "test": "phpunit"
     },
     "extra": {
         "laravel": {
@@ -23,7 +36,8 @@
                 "Sufian\\SlugHelper\\SlugHelperServiceProvider"
             ],
             "aliases": {
-                "SlugHelper": "Suian\\SlugHelper\\SlugHelperFacade"
+                "UniqueSlug": "Sufian\\SlugHelper\\Facades\\SlugHelperFacade",
+                "SlugHelper": "Sufian\\SlugHelper\\Facades\\SlugHelperFacade"
             }
         }
     }

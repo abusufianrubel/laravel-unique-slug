@@ -1,17 +1,19 @@
-# Laravel-unique-slug-generator
-A simple but beautiful unique slug generator for Laravel eloquent model.
+# Laravel Unique Slug
+
+A small unique-slug generator for Laravel Eloquent models.
 
 ---
 
 ## Installation
 
 ```sh
-composer require sufian/slug-helper
+composer require sufianrubel/unique-slug
 ```
 
 ## Configuration
-**Service Provider Registration**
-In `config/app.php`, add in `providers` array -
+
+Laravel discovers the service provider and facade automatically. For applications
+with package discovery disabled, register them manually:
 
 ```php
 'providers' => [
@@ -21,8 +23,6 @@ In `config/app.php`, add in `providers` array -
 ],
 ```
 
-**Facade Class Alias**
-Add in aliases array - 
 ```php
 'aliases' => Facade::defaultAliases()->merge([
     // ...
@@ -31,50 +31,53 @@ Add in aliases array -
 ])->toArray(),
 ```
 
-## Use from Controller
+## Usage
 
-#### Import first the UniqueSlug facade
+Import the facade:
+
 ```php
-use Sufian\SlugHelper\Facades\SlugHelperFacade;
+use Sufian\SlugHelper\Facades\SlugHelperFacade as UniqueSlug;
 ```
-### Example #01- Post unique slug from title
 
-Let's assume, we have in `Post` class, we've added `slug` column which is unique. Now, if we passed `title` and generate `slug` from that, then -
+### Generate a unique post slug
+
+Assume the `posts.slug` column has a unique index:
 
 ```php
 use App\Models\Post;
 
 // First time create post with title Simple Post
 UniqueSlug::generate(Post::class, 'Simple Post', 'slug');
-// Output: simple-post
+// Output: simple_post
 
 // Second time create post with title Simple Post
 UniqueSlug::generate(Post::class, 'Simple Post', 'slug');
-// Output: simple-post-1
+// Output: simple_post_1
 
 // Third time create post with title Simple Post
 UniqueSlug::generate(Post::class, 'Simple Post', 'slug');
-// Output: simple-post-2
+// Output: simple_post_2
 ```
 
-### Example #02 - Pass custom separator
+### Pass a custom separator
 
-Let's assume separator is `''` empty.
+Pass a custom separator. An empty or `null` separator uses the configured default
+for backward compatibility.
 
 ```php
 // First time create user.
-UniqueSlug::generate(User::class, 'sufian', 'username', ''); // sufian
+UniqueSlug::generate(User::class, 'sufian', 'username', '-'); // sufian
 
 // Second time create user.
-UniqueSlug::generate(User::class, 'sufian', 'username', ''); // sufian_1
+UniqueSlug::generate(User::class, 'sufian', 'username', '-'); // sufian-1
 
 // Third time create user.
-UniqueSlug::generate(User::class, 'sufian', 'username', ''); // sufian_2
+UniqueSlug::generate(User::class, 'sufian', 'username', '-'); // sufian-2
 ```
 
 ### Example - Unique slug for category or any model easily
 ```php
-public function create(array $data): Category|null
+public function create(array $data): ?Category
 {
     if (empty($data['slug'])) {
         $data['slug'] = UniqueSlug::generate(Category::class, $data['name'], 'slug');
@@ -86,7 +89,8 @@ public function create(array $data): Category|null
 
 ## API Docs
 
-### Generate method -
+### Generate method
+
 ```php
 UniqueSlug::generate($model, $value, $field, $separator);
 ```
@@ -95,10 +99,10 @@ UniqueSlug::generate($model, $value, $field, $separator);
 /**
  * Generate a Unique Slug.
  *
- * @param object $model
+ * @param class-string<\Illuminate\Database\Eloquent\Model>|\Illuminate\Database\Eloquent\Model $model
  * @param string $value
  * @param string $field
- * @param string $separator
+ * @param string|null $separator
  *
  * @return string
  * @throws \Exception
@@ -113,8 +117,9 @@ public function generate(
 ```
 
 #### Publish configuration
+
 ```sh
-php artisan vendor:publish sufian/slug-helper
+php artisan vendor:publish --tag=slug-helper-config
 ```
 
 #### Configurations
@@ -129,7 +134,7 @@ return [
     | If no separator is passed, then this default separator will be used as slug.
     |
     */
-    'separator' => '-',
+    'separator' => '_',
 
     /*
     |--------------------------------------------------------------------------
@@ -137,7 +142,7 @@ return [
     |--------------------------------------------------------------------------
     |
     | Default 100, slug will generated like
-    | test-1, test-2, test-3 .... test-100
+    | test_1, test_2, test_3 .... test_100
     |
     */
     'max_count' => 100,
@@ -145,5 +150,15 @@ return [
 
 ```
 
+When updating an existing record, pass the model instance to exclude that record:
+
+```php
+$post->slug = UniqueSlug::generate($post, $post->title, 'slug');
+```
+
+Always add a unique database index to the slug column. The generator checks the
+current database state, while the index also protects against concurrent requests.
+
 ## Contribution
-You're open to create any Pull request.
+
+Pull requests are welcome.

@@ -17,7 +17,7 @@ return [
     |--------------------------------------------------------------------------
     |
     | Default 100, slug will generated like
-    | test-1, test-2, test-3 .... test-100
+    | test_1, test_2, test_3 .... test_100
     |
     */
     'max_count' => 100,
