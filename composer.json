@@ -2,6 +2,7 @@
     "name": "sufianrubel/unique-slug",
     "description": "A Laravel package for generating unique slugs.",
     "type": "library",
+    "license": "MIT",
     "authors": [
         {
             "name": "Sufian Techvill",

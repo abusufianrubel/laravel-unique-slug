@@ -162,3 +162,7 @@ current database state, while the index also protects against concurrent request
 ## Contribution
 
 Pull requests are welcome.
+
+## License
+
+Laravel Unique Slug is open-sourced software licensed under the [MIT license](LICENSE).
